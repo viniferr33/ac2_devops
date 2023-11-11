@@ -1,1 +1,0 @@
-docker images -q --filter "reference=$APPLICATION_IMAGE_NAME" | xargs docker rmi -f
