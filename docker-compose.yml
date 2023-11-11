@@ -4,9 +4,9 @@ services:
   database:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
-      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DATABASE}"
+      POSTGRES_USER: "${POSTGRES_USER}"
     volumes:
       - db-volume:/var/lib/postgresql/data
 
@@ -14,7 +14,10 @@ services:
     image: ${APPLICATION_IMAGE_NAME}
     environment:
       DB_HOST: database
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DATABASE}"
+      POSTGRES_USER: "${POSTGRES_USER}"
     ports:
-      - "8080:8080"
+      - "${PORT}:${PORT}"
 volumes:
   db-volume:
