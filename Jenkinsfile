@@ -23,6 +23,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
+                        sh 'chmod +x ./jenkins/scripts/test.sh'
                         sh './jenkins/scripts/test.sh'
                     } else {
                         bat 'jenkins/scripts/test.bat'
