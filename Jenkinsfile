@@ -54,6 +54,17 @@ pipeline {
 
             steps {
                 script {
+                    def envFile = """
+                        POSTGRES_PASSWORD=${env.POSTGRES_PASSWORD}
+                        POSTGRES_USER=${env.POSTGRES_USER}
+                        POSTGRES_DATABASE=${env.POSTGRES_DATABASE}
+                        PORT=${env.PORT}
+                        ENV=${env.ENV}
+                    """
+                    writeFile file: '.env', text: envFile
+                }
+
+                script {
                     if(isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/compose.sh'
                         sh './jenkins/scripts/compose.sh'
@@ -81,6 +92,8 @@ pipeline {
             }
 
             steps {
+                input message: 'Deploy on Azure?'
+
                 script {
                     if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/deploy.sh'
