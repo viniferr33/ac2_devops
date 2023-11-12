@@ -21,15 +21,48 @@ pipeline {
 
         stage('Test') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'chmod +x ./jenkins/scripts/test.sh'
-                        sh './jenkins/scripts/test.sh'
-                    } else {
-                        bat 'jenkins/scripts/test.bat'
-                    }
-                    junit 'target/surefire-reports/**/*.xml'
-                    jacoco(execPattern: 'target/**.exec')
+                if (isUnix()) {
+                    sh 'chmod +x ./jenkins/scripts/test.sh'
+                    sh './jenkins/scripts/test.sh'
+                } else {
+                    bat 'jenkins/scripts/test.bat'
+                }
+                junit 'target/surefire-reports/**/*.xml'
+                jacoco(execPattern: 'target/**.exec')
+            }
+        }
+
+        stage('Build') {
+            steps {
+                if(isUnix()) {
+                    sh 'chmod +x ./jenkins/scripts/build.sh'
+                    sh './jenkins/scripts/build.sh'
+                } else {
+                    bat 'jenkins/scripts/build.bat'
+                }
+            }
+        }
+
+        stage('Homolog') {
+            when {
+                branch 'homolog'
+            }
+
+            steps {
+                if(isUnix()) {
+                    sh 'chmod +x ./jenkins/scripts/compose.sh'
+                    sh './jenkins/scripts/compose.sh'
+                } else {
+                    bat 'jenkins/scripts/compose.bat'
+                }
+
+                input message: 'Kill the container? (click to continue)'
+
+                if(isUnix()) {
+                    sh 'chmod +x ./jenkins/scripts/kill.sh'
+                    sh './jenkins/scripts/kill.sh'
+                } else {
+                    bat 'jenkins/scripts/kill.bat'
                 }
             }
         }

@@ -1,1 +1,1 @@
-${MAVEN_HOME}/bin/mvn clean install -Pdev
+"${MAVEN_HOME}"/bin/mvn clean install -Pdev
