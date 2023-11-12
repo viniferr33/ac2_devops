@@ -91,9 +91,9 @@ pipeline {
                 branch 'main'
             }
 
-            input message: 'Deploy on Azure?'
-
             steps {
+                input message: 'Deploy on Azure?'
+
                 script {
                     if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/deploy.sh'
