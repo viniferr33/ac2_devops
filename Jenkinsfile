@@ -10,8 +10,6 @@ pipeline {
         ENV = getEnvName(env.BRANCH_NAME);
 
         APPLICATION_IMAGE_NAME = "ac2_${env.ENV}"
-
-        MAVEN_HOME = tool 'Maven'
     }
 
     stages {
@@ -23,30 +21,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh './jenkins/scripts/test.sh'
-                    } else {
-                        bat 'jenkins/scripts/test.bat'
-                    }
+                withMaven {
+                    sh 'mvn clean install -Pdev'
                     junit 'target/surefire-reports/**/*.xml'
                     jacoco(execPattern: 'target/**.exec')
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/site/jacoco/',
-                reportFiles: 'index.html',
-                reportName: 'JaCoCo Code Coverage'
-            ])
-            cleanWs()
         }
     }
 }
