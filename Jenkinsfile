@@ -74,6 +74,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'chmod +x ./jenkins/scripts/deploy.sh'
+                        sh './jenkins/scripts/deploy.sh'
+                    } else {
+                        bat 'jenkins/scripts/deploy.bat'
+                    }
+                }
+            }
+        }
     }
 }
 
