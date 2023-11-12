@@ -53,6 +53,16 @@
             </dependencies>
         </profile>
         <profile>
+            <id>homol</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>prod</id>
             <dependencies>
                 <dependency>
