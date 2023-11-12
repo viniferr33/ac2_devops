@@ -44,6 +44,12 @@
     <profiles>
         <profile>
             <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>com.h2database</groupId>
@@ -54,6 +60,9 @@
         </profile>
         <profile>
             <id>homol</id>
+            <properties>
+                <spring.profiles.active>homol</spring.profiles.active>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.postgresql</groupId>
@@ -64,6 +73,9 @@
         </profile>
         <profile>
             <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.postgresql</groupId>
