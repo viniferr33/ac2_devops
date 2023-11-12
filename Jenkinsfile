@@ -21,8 +21,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                withMaven {
-                    sh 'mvn clean install -Pdev'
+                script {
+                    if (isUnix()) {
+                        sh './jenkins/scripts/test.sh'
+                    } else {
+                        bat 'jenkins/scripts/test.bat'
+                    }
                     junit 'target/surefire-reports/**/*.xml'
                     jacoco(execPattern: 'target/**.exec')
                 }
