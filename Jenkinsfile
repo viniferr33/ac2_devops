@@ -9,7 +9,7 @@ pipeline {
         PORT = "${env.BRANCH_NAME == "develop" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
 
-        APPLICATION_IMAGE_NAME = "ac2" + env.ENV
+        APPLICATION_IMAGE_NAME = "ac2_${env.ENV}"
 
         MAVEN_HOME = tool 'Maven'
     }
