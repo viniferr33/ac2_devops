@@ -1,10 +1,8 @@
 package com.facens.ac2.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "TableProject")
@@ -14,6 +12,14 @@ public class ProjectModel {
     private UUID id;
     private String name;
     private String category;
+
+    @ManyToMany
+    @JoinTable(
+            name = "TableStudentProject",
+            joinColumns = @JoinColumn(name = "TableProject_id"),
+            inverseJoinColumns = @JoinColumn(name = "TableStudent_id")
+    )
+    private Set<StudentModel> students;
 
     public UUID getId() {
         return id;

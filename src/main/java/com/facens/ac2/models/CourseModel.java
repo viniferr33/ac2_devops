@@ -2,6 +2,7 @@ package com.facens.ac2.models;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "TableCourse")
@@ -12,6 +13,14 @@ public class CourseModel {
 
     @Column(unique = true)
     private String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "TableStudentCourse",
+            joinColumns = @JoinColumn(name = "TableCourse_id"),
+            inverseJoinColumns = @JoinColumn(name = "TableStudent_id")
+    )
+    private Set<StudentModel> students;
 
     public UUID getId() {
         return id;
@@ -27,5 +36,13 @@ public class CourseModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<StudentModel> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<StudentModel> students) {
+        this.students = students;
     }
 }

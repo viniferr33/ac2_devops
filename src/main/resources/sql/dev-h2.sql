@@ -12,3 +12,6 @@ INSERT INTO table_course (id, name) VALUES
     (random_uuid(), 'Course7'),
     (random_uuid(), 'Course8'),
     (random_uuid(), 'Course9');
+
+INSERT INTO table_student (id, name, email) VALUES
+    (random_uuid(), 'Student1', 'student1@email.com');
