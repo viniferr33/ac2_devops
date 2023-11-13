@@ -1,16 +1,23 @@
 package com.facens.ac2.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity(name = "TableEnrolledProject")
 public class EnrolledProject {
-    @ManyToMany
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long id;
+
+    @ManyToOne
+    @JoinColumn(name = "StudentId")
     public Student student;
-    @ManyToMany
+
+    @ManyToOne
+    @JoinColumn(name = "ProjectId")
     public Project project;
+    @Enumerated(EnumType.STRING)
     public EnrollmentStatus status;
     public LocalDate startDate;
     public LocalDate finishDate;

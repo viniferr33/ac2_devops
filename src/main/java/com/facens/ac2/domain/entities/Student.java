@@ -23,9 +23,10 @@ public class Student {
 
     public String name;
     public String email;
-    @ManyToMany
+
+    @OneToMany(mappedBy = "student")
     public List<EnrolledProject> projects;
-    @ManyToMany
+    @OneToMany(mappedBy = "student")
     public List<EnrolledCourse> courses;
 
     public Student(
