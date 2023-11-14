@@ -29,6 +29,9 @@ public class Student {
     @OneToMany(mappedBy = "student")
     public List<EnrolledCourse> courses;
 
+    public Student() {
+    }
+
     public Student(
             String name,
             String email,
