@@ -31,6 +31,10 @@ public class StudentDTO {
         this.email = email;
     }
 
+    public StudentDTO() {
+
+    }
+
     public static List<StudentDTO> fromEntity(List<Student> studentList) {
         return studentList.stream()
                 .map(StudentDTO::fromEntity)

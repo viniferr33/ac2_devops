@@ -22,6 +22,10 @@ public class CourseDTO {
         this.name = name;
     }
 
+    public CourseDTO() {
+
+    }
+
     public static List<CourseDTO> fromEntity(List<Course> courseList) {
         return courseList.stream()
                 .map(CourseDTO::fromEntity)
