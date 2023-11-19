@@ -2,6 +2,7 @@ package com.facens.ac2.app.controllers;
 
 import com.facens.ac2.app.requests.CreateStudentRequest;
 import com.facens.ac2.app.requests.EnrollOnCourseRequest;
+import com.facens.ac2.app.requests.UpdateStatusRequest;
 import com.facens.ac2.domain.entities.exceptions.CourseException;
 import com.facens.ac2.domain.entities.exceptions.EnrolledCourseException;
 import com.facens.ac2.domain.entities.exceptions.StudentException;
@@ -82,6 +83,30 @@ public class StudentController {
                                 )
                         )
                 )
+        );
+    }
+
+    @GetMapping("/{studentId}/course/{courseId}")
+    public ResponseEntity<EnrolledCourseDTO> getEnrolledCourse(@PathVariable String studentId, @PathVariable String courseId) throws StudentException, CourseException, EnrolledCourseException {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                EnrolledCourseDTO.fromEntity(
+                        enrolledCourseService.getEnrolledCourse(
+                                UUID.fromString(studentId),
+                                UUID.fromString(courseId)
+                        )
+                )
+        );
+    }
+
+    @PutMapping("/{studentId}/course/{courseId}")
+    public ResponseEntity<EnrolledCourseDTO> finishCourse(@PathVariable String studentId, @PathVariable String courseId, @RequestBody UpdateStatusRequest request) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                EnrolledCourseDTO.fromEntity(enrolledCourseService.changeCourseStatus(
+                        UUID.fromString(studentId),
+                        UUID.fromString(courseId),
+                        request.operation(),
+                        request.finalGrade()
+                ))
         );
     }
 }

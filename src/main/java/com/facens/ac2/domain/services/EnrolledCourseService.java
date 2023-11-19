@@ -101,4 +101,18 @@ public class EnrolledCourseService {
 
         return enrolledCourseRepository.save(enrolledCourse);
     }
+
+    public EnrolledCourse changeCourseStatus(UUID studentId, UUID courseId, String operation, Double finalGrade) throws EnrolledCourseException, StudentException, CourseException {
+        return switch (operation) {
+            case "finish" -> {
+                if (finalGrade == null) {
+                    throw new EnrolledCourseException("Cannot finish a course without final grade!");
+                }
+                yield finishCourse(studentId, courseId, finalGrade);
+            }
+            case "drop" -> dropCourse(studentId, courseId);
+            case "reopen" -> reopenCourse(studentId, courseId);
+            default -> throw new EnrolledCourseException("Invalid Course Operation!");
+        };
+    }
 }
