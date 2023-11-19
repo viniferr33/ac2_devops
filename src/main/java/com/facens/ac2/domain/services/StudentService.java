@@ -9,7 +9,6 @@ import com.facens.ac2.repository.IStudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,16 +30,34 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Optional<Student> getStudent(String email) {
-        return studentRepository.findByEmail(email);
+    public Student getStudent(String email) throws StudentException {
+        var student = studentRepository.findByEmail(email);
+
+        if (student.isEmpty()) {
+            throw new StudentException("Student does not exists!");
+        }
+
+        return student.get();
     }
 
-    public Optional<Student> getStudent(UUID id) {
-        return studentRepository.findById(id);
+    public Student getStudent(UUID id) throws StudentException {
+        var student = studentRepository.findById(id);
+
+        if (student.isEmpty()) {
+            throw new StudentException("Student does not exists!");
+        }
+
+        return student.get();
     }
 
     public List<Student> listStudents() {
         return studentRepository.findAll();
+    }
+
+    public Integer getAvailableCourseNum(UUID id) throws StudentException {
+        var student = getStudent(id);
+
+        return getAvailableCourseNum(student);
     }
 
     public Integer getAvailableCourseNum(Student student) {

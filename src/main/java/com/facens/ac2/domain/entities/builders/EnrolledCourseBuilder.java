@@ -59,8 +59,10 @@ public class EnrolledCourseBuilder {
             throw new EnrolledCourseException("Cannot create an Enrolled Course with STATUS = COMPLETED without Final Grade!");
         }
 
-        if (finalGrade.isNaN() || (finalGrade < 0.0 || finalGrade > 10)) {
-            throw new EnrolledCourseException("Cannot create an Enrolled Course with an invalid Final Grade!");
+        if (finalGrade != null) {
+            if (finalGrade.isNaN() || (finalGrade < 0.0 || finalGrade > 10)) {
+                throw new EnrolledCourseException("Cannot create an Enrolled Course with an invalid Final Grade!");
+            }
         }
 
         if (status == null) {
@@ -71,7 +73,13 @@ public class EnrolledCourseBuilder {
             startDate = LocalDate.now();
         }
 
-        return new EnrolledCourse(
+        return status != EnrollmentStatus.COMPLETED
+                ? new EnrolledCourse(
+                this.student,
+                this.course,
+                this.status
+        )
+                : new EnrolledCourse(
                 this.student,
                 this.course,
                 this.status,

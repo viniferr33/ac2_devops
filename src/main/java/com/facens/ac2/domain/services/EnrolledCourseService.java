@@ -5,11 +5,14 @@ import com.facens.ac2.domain.entities.EnrolledCourse;
 import com.facens.ac2.domain.entities.EnrollmentStatus;
 import com.facens.ac2.domain.entities.Student;
 import com.facens.ac2.domain.entities.builders.EnrolledCourseBuilder;
+import com.facens.ac2.domain.entities.exceptions.CourseException;
 import com.facens.ac2.domain.entities.exceptions.EnrolledCourseException;
+import com.facens.ac2.domain.entities.exceptions.StudentException;
 import com.facens.ac2.repository.IEnrolledCourseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EnrolledCourseService {
@@ -24,12 +27,15 @@ public class EnrolledCourseService {
         this.courseService = courseService;
     }
 
-    public EnrolledCourse create(Student student, Course course) throws EnrolledCourseException {
+    public EnrolledCourse create(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
         /**
          * 1 -> Checks if is the first course of the student
          * 2 -> Checks if the student is able to enroll on a new course (availableCourseList >= 1)
          * 3 -> Checks if the student is not already enrolled on course
          */
+
+        var student = studentService.getStudent(studentId);
+        var course = courseService.getCourse(courseId);
 
         if (!student.getCourses().isEmpty()) {
             Integer numCourses = studentService.getAvailableCourseNum(student);
@@ -54,18 +60,25 @@ public class EnrolledCourseService {
         return enrolledCourseRepository.save(enrolledCourse);
     }
 
+    public EnrolledCourse getEnrolledCourse(UUID studentId, UUID courseId) throws StudentException, CourseException, EnrolledCourseException {
+        var student = studentService.getStudent(studentId);
+        var course = courseService.getCourse(courseId);
+
+        return getEnrolledCourse(student, course);
+    }
+
     public EnrolledCourse getEnrolledCourse(Student student, Course course) throws EnrolledCourseException {
         var enrolledCourse = enrolledCourseRepository.findOneByStudentAndCourse(student, course);
 
-        if (enrolledCourse == null) {
+        if (enrolledCourse.isEmpty()) {
             throw new EnrolledCourseException("Student is not enrolled on Course!");
         }
 
-        return enrolledCourse;
+        return enrolledCourse.get();
     }
 
-    public EnrolledCourse finishCourse(Student student, Course course, Double finalGrade) throws EnrolledCourseException {
-        var enrolledCourse = getEnrolledCourse(student, course);
+    public EnrolledCourse finishCourse(UUID studentId, UUID courseId, Double finalGrade) throws EnrolledCourseException, StudentException, CourseException {
+        var enrolledCourse = getEnrolledCourse(studentId, courseId);
 
         enrolledCourse.setFinalGrade(finalGrade);
         enrolledCourse.setStatus(EnrollmentStatus.COMPLETED);
@@ -73,16 +86,16 @@ public class EnrolledCourseService {
         return enrolledCourseRepository.save(enrolledCourse);
     }
 
-    public EnrolledCourse dropCourse(Student student, Course course) throws EnrolledCourseException {
-        var enrolledCourse = getEnrolledCourse(student, course);
+    public EnrolledCourse dropCourse(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
+        var enrolledCourse = getEnrolledCourse(studentId, courseId);
 
         enrolledCourse.setStatus(EnrollmentStatus.DROPPED);
 
         return enrolledCourseRepository.save(enrolledCourse);
     }
 
-    public EnrolledCourse reopenCourse(Student student, Course course) throws EnrolledCourseException {
-        var enrolledCourse = getEnrolledCourse(student, course);
+    public EnrolledCourse reopenCourse(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
+        var enrolledCourse = getEnrolledCourse(studentId, courseId);
 
         enrolledCourse.setStatus(EnrollmentStatus.ACTIVE);
 

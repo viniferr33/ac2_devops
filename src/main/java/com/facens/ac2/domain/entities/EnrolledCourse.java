@@ -23,6 +23,9 @@ public class EnrolledCourse {
     public LocalDate finishDate;
     public double finalGrade;
 
+    public EnrolledCourse() {
+    }
+
     public EnrolledCourse(Student student, Course course, EnrollmentStatus status, LocalDate startDate, LocalDate finishDate, double finalGrade) {
         this.student = student;
         this.course = course;
@@ -30,6 +33,12 @@ public class EnrolledCourse {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.finalGrade = finalGrade;
+    }
+
+    public EnrolledCourse(Student student, Course course, EnrollmentStatus status) {
+        this.student = student;
+        this.course = course;
+        this.status = status;
     }
 
     public Student getStudent() {

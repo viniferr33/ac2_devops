@@ -1,6 +1,7 @@
 package com.facens.ac2.app.controllers;
 
 import com.facens.ac2.app.requests.CreateCourseRequest;
+import com.facens.ac2.domain.entities.exceptions.CourseException;
 import com.facens.ac2.domain.services.CourseService;
 import com.facens.ac2.dto.CourseDTO;
 import jakarta.validation.Valid;
@@ -30,14 +31,12 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseDTO> getById(@PathVariable String id) {
+    public ResponseEntity<CourseDTO> getById(@PathVariable String id) throws CourseException {
         var course = courseService.getCourse(UUID.fromString(id));
 
-        return course.map(value -> ResponseEntity.status(HttpStatus.OK).body(
-                CourseDTO.fromEntity(value)
-        )).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new CourseDTO()
-        ));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                CourseDTO.fromEntity(course)
+        );
     }
 
     @PostMapping

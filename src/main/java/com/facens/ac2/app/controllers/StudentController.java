@@ -1,10 +1,15 @@
 package com.facens.ac2.app.controllers;
 
 import com.facens.ac2.app.requests.CreateStudentRequest;
+import com.facens.ac2.app.requests.EnrollOnCourseRequest;
+import com.facens.ac2.domain.entities.exceptions.CourseException;
+import com.facens.ac2.domain.entities.exceptions.EnrolledCourseException;
 import com.facens.ac2.domain.entities.exceptions.StudentException;
 import com.facens.ac2.domain.services.CourseService;
+import com.facens.ac2.domain.services.EnrolledCourseService;
 import com.facens.ac2.domain.services.StudentService;
 import com.facens.ac2.dto.AvailableCoursesDTO;
+import com.facens.ac2.dto.EnrolledCourseDTO;
 import com.facens.ac2.dto.StudentDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,10 +26,12 @@ public class StudentController {
 
     final StudentService studentService;
     final CourseService courseService;
+    final EnrolledCourseService enrolledCourseService;
 
-    public StudentController(StudentService studentService, CourseService courseService) {
+    public StudentController(StudentService studentService, CourseService courseService, EnrolledCourseService enrolledCourseService) {
         this.studentService = studentService;
         this.courseService = courseService;
+        this.enrolledCourseService = enrolledCourseService;
     }
 
     @GetMapping
@@ -35,31 +42,21 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentDTO> getById(@PathVariable String id) {
+    public ResponseEntity<StudentDTO> getById(@PathVariable String id) throws StudentException {
         var student = studentService.getStudent(UUID.fromString(id));
-
-        return student.map(value -> ResponseEntity.status(HttpStatus.OK).body(
-                StudentDTO.fromEntity(value)
-        )).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new StudentDTO()
-        ));
-    }
-
-    @GetMapping("/{id}/courses")
-    public ResponseEntity<AvailableCoursesDTO> listAvaliableCourses(@PathVariable String id) {
-        var student = studentService.getStudent(UUID.fromString(id));
-
-        if (student.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new AvailableCoursesDTO()
-            );
-        }
-
-        var availableCourses = courseService.listAvailableCoursesForStudent(student.get());
-        var numAvaliableCourses = studentService.getAvailableCourseNum(student.get());
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                AvailableCoursesDTO.fromEntity(availableCourses, numAvaliableCourses)
+                StudentDTO.fromEntity(student)
+        );
+    }
+
+    @GetMapping("/{id}/course")
+    public ResponseEntity<AvailableCoursesDTO> listAvaliableCourses(@PathVariable String id) throws StudentException {
+        var availableCourses = courseService.listAvailableCoursesForStudent(UUID.fromString(id));
+        var numAvailableCourses = studentService.getAvailableCourseNum(UUID.fromString(id));
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                AvailableCoursesDTO.fromEntity(availableCourses, numAvailableCourses)
         );
     }
 
@@ -72,6 +69,19 @@ public class StudentController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 StudentDTO.fromEntity(student)
+        );
+    }
+
+    @PostMapping("/{studentId}/course")
+    public ResponseEntity<EnrolledCourseDTO> enrollOnCourse(@RequestBody @Valid EnrollOnCourseRequest request, @PathVariable String studentId) throws StudentException, CourseException, EnrolledCourseException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                EnrolledCourseDTO.fromEntity(
+                        enrolledCourseService.create(
+                                UUID.fromString(studentId),
+                                UUID.fromString(request.courseId()
+                                )
+                        )
+                )
         );
     }
 }
