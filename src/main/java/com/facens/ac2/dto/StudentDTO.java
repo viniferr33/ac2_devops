@@ -13,17 +13,13 @@ public class StudentDTO {
     private LocalDateTime updatedAt;
     private String name;
     private String email;
-    private List<EnrolledCourseDTO> courses;
-    private List<EnrolledProjectDTO> projects;
 
-    public StudentDTO(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email, List<EnrolledCourseDTO> courses, List<EnrolledProjectDTO> projects) {
+    public StudentDTO(UUID id, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.name = name;
         this.email = email;
-        this.courses = courses;
-        this.projects = projects;
     }
 
     public StudentDTO(String name, String email) {
@@ -47,9 +43,7 @@ public class StudentDTO {
                 student.createdAt,
                 student.updatedAt,
                 student.name,
-                student.email,
-                EnrolledCourseDTO.fromEntity(student.courses),
-                EnrolledProjectDTO.fromEntity(student.projects)
+                student.email
         );
     }
 
@@ -91,21 +85,5 @@ public class StudentDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<EnrolledCourseDTO> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<EnrolledCourseDTO> courses) {
-        this.courses = courses;
-    }
-
-    public List<EnrolledProjectDTO> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(List<EnrolledProjectDTO> projects) {
-        this.projects = projects;
     }
 }

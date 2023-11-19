@@ -19,6 +19,9 @@ public class Project {
     public String name;
     public String category;
 
+    public Project() {
+    }
+
     public Project(
             String name,
             String category

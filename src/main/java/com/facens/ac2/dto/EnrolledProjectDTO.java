@@ -9,15 +9,13 @@ import java.util.stream.Collectors;
 
 public class EnrolledProjectDTO {
     private long id;
-    private StudentDTO student;
     private ProjectDTO project;
     private EnrollmentStatus status;
     private LocalDate startDate;
     private LocalDate finishDate;
 
-    public EnrolledProjectDTO(long id, StudentDTO student, ProjectDTO project, EnrollmentStatus status, LocalDate startDate, LocalDate finishDate) {
+    public EnrolledProjectDTO(long id, ProjectDTO project, EnrollmentStatus status, LocalDate startDate, LocalDate finishDate) {
         this.id = id;
-        this.student = student;
         this.project = project;
         this.status = status;
         this.startDate = startDate;
@@ -33,7 +31,6 @@ public class EnrolledProjectDTO {
     public static EnrolledProjectDTO fromEntity(EnrolledProject enrolledProject) {
         return new EnrolledProjectDTO(
                 enrolledProject.id,
-                StudentDTO.fromEntity(enrolledProject.student),
                 ProjectDTO.fromEntity(enrolledProject.project),
                 enrolledProject.status,
                 enrolledProject.startDate,
@@ -47,14 +44,6 @@ public class EnrolledProjectDTO {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public StudentDTO getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentDTO student) {
-        this.student = student;
     }
 
     public ProjectDTO getProject() {

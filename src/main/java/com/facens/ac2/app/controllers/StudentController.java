@@ -12,6 +12,7 @@ import com.facens.ac2.domain.services.StudentService;
 import com.facens.ac2.dto.AvailableCoursesDTO;
 import com.facens.ac2.dto.EnrolledCourseDTO;
 import com.facens.ac2.dto.StudentDTO;
+import com.facens.ac2.dto.StudentEnrolledCourseDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,15 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/course")
+    public ResponseEntity<StudentEnrolledCourseDTO> listEnrolledCourses(@PathVariable String id) throws StudentException {
+        var student = studentService.getStudent(UUID.fromString(id));
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                StudentEnrolledCourseDTO.fromEntity(student)
+        );
+    }
+
+    @GetMapping("/{id}/course/available")
     public ResponseEntity<AvailableCoursesDTO> listAvaliableCourses(@PathVariable String id) throws StudentException {
         var availableCourses = courseService.listAvailableCoursesForStudent(UUID.fromString(id));
         var numAvailableCourses = studentService.getAvailableCourseNum(UUID.fromString(id));
