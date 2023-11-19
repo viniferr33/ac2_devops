@@ -4,7 +4,7 @@ import com.facens.ac2.domain.entities.Course;
 import com.facens.ac2.domain.entities.EnrolledCourse;
 import com.facens.ac2.domain.entities.EnrollmentStatus;
 import com.facens.ac2.domain.entities.Student;
-import com.facens.ac2.domain.entities.builders.exceptions.EnrolledCourseException;
+import com.facens.ac2.domain.entities.exceptions.EnrolledCourseException;
 
 import java.time.LocalDate;
 

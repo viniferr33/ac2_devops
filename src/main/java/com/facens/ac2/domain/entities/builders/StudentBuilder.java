@@ -3,7 +3,7 @@ package com.facens.ac2.domain.entities.builders;
 import com.facens.ac2.domain.entities.EnrolledCourse;
 import com.facens.ac2.domain.entities.EnrolledProject;
 import com.facens.ac2.domain.entities.Student;
-import com.facens.ac2.domain.entities.builders.exceptions.StudentException;
+import com.facens.ac2.domain.entities.exceptions.StudentException;
 
 import java.util.ArrayList;
 import java.util.List;

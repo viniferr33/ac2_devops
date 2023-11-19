@@ -4,7 +4,7 @@ import com.facens.ac2.domain.entities.EnrolledProject;
 import com.facens.ac2.domain.entities.EnrollmentStatus;
 import com.facens.ac2.domain.entities.Project;
 import com.facens.ac2.domain.entities.Student;
-import com.facens.ac2.domain.entities.builders.exceptions.EnrolledProjectException;
+import com.facens.ac2.domain.entities.exceptions.EnrolledProjectException;
 
 import java.time.LocalDate;
 

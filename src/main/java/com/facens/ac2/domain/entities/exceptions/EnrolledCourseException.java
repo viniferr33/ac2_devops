@@ -1,4 +1,4 @@
-package com.facens.ac2.domain.entities.builders.exceptions;
+package com.facens.ac2.domain.entities.exceptions;
 
 public class EnrolledCourseException extends Exception {
     public EnrolledCourseException(String message) {
