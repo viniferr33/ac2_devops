@@ -9,7 +9,7 @@ pipeline {
         PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
 
-        APPLICATION_IMAGE_NAME = "ac2_api"
+        APPLICATION_IMAGE_NAME = "viniferr33/ac2"
     }
 
     stages {
@@ -35,6 +35,10 @@ pipeline {
         }
 
         stage('Build') {
+            when {
+                branch 'dev'
+            }
+
             steps {
                 script {
                     if(isUnix()) {
