@@ -25,6 +25,10 @@ public class ProjectDTO {
         this.category = category;
     }
 
+    public ProjectDTO() {
+
+    }
+
     public static List<ProjectDTO> fromEntity(List<Project> projectList) {
         return projectList.stream()
                 .map(ProjectDTO::fromEntity)
