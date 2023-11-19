@@ -6,10 +6,10 @@ pipeline {
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_DATABASE = credentials('POSTGRES_DATABASE')
 
-        PORT = "${env.BRANCH_NAME == "develop" ? "8081" : "8080"}"
+        PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
 
-        APPLICATION_IMAGE_NAME = "ac2_${env.ENV}"
+        APPLICATION_IMAGE_NAME = "ac2_api"
     }
 
     stages {
