@@ -19,8 +19,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class EnrolledCourseServiceTest {
     private IEnrolledCourseRepository enrolledCourseRepository;
@@ -67,6 +66,7 @@ class EnrolledCourseServiceTest {
         assertEquals(EnrollmentStatus.ACTIVE, enrolledCourse.getStatus());
         assertEquals(student, enrolledCourse.getStudent());
         assertEquals(course, enrolledCourse.getCourse());
+        verify(enrolledCourseRepository, times(1)).save(any(EnrolledCourse.class));
     }
 
     @Test
@@ -186,6 +186,9 @@ class EnrolledCourseServiceTest {
         assertNotNull(enrolledCourse);
         assertEquals(student, enrolledCourse.getStudent());
         assertEquals(course, enrolledCourse.getCourse());
+        verify(studentService, times(1)).getStudent(any(UUID.class));
+        verify(courseService, times(1)).getCourse(any(UUID.class));
+        verify(enrolledCourseRepository, times(1)).findOneByStudentAndCourse(any(Student.class), any(Course.class));
     }
 
     @Test
