@@ -28,11 +28,6 @@ public class EnrolledCourseService {
     }
 
     public EnrolledCourse create(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
-        /**
-         * 1 -> Checks if is the first course of the student
-         * 2 -> Checks if the student is able to enroll on a new course (availableCourseList >= 1)
-         * 3 -> Checks if the student is not already enrolled on course
-         */
 
         var student = studentService.getStudent(studentId);
         var course = courseService.getCourse(courseId);
@@ -46,8 +41,8 @@ public class EnrolledCourseService {
 
             List<Course> studentCourses = courseService.listAvailableCoursesForStudent(student);
 
-            if (studentCourses.contains(course)) {
-                throw new EnrolledCourseException("Student is already enrolled on course!");
+            if (!studentCourses.contains(course)) {
+                throw new EnrolledCourseException("Course is not available for Student!");
             }
         }
 
