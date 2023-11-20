@@ -7,12 +7,19 @@ import com.facens.ac2.domain.entities.exceptions.StudentException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class StudentBuilder {
+    private UUID id;
     private String name;
     private String email;
     private List<EnrolledProject> projects;
     private List<EnrolledCourse> courses;
+
+    public StudentBuilder withId(UUID id) {
+        this.id = id;
+        return this;
+    }
 
     public StudentBuilder withName(String name) {
         this.name = name;
@@ -52,6 +59,7 @@ public class StudentBuilder {
         }
 
         return new Student(
+                this.id,
                 this.name,
                 this.email,
                 this.projects,

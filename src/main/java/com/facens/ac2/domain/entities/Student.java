@@ -54,6 +54,14 @@ public class Student {
         this.courses = courses;
     }
 
+    public Student(UUID id, String name, String email, List<EnrolledProject> projects, List<EnrolledCourse> courses) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.projects = projects;
+        this.courses = courses;
+    }
+
     public UUID getId() {
         return id;
     }
