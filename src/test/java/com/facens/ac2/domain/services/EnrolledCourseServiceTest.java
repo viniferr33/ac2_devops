@@ -209,4 +209,280 @@ class EnrolledCourseServiceTest {
             enrolledCourseService.getEnrolledCourse(UUID.randomUUID(), UUID.randomUUID());
         });
     }
+
+    @Test
+    void changeCourseStatus_FinishCourse_Success() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act
+        EnrolledCourse enrolledCourse = enrolledCourseService.changeCourseStatus(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "finish",
+                10.0
+        );
+
+        // Assert
+        assertNotNull(enrolledCourse);
+        assertEquals(EnrollmentStatus.COMPLETED, enrolledCourse.getStatus());
+        assertEquals(10.0, enrolledCourse.getFinalGrade());
+    }
+
+    @Test
+    void changeCourseStatus_FinishCourse_MissingGrade() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "finish",
+                    null
+            );
+        });
+    }
+
+    @Test
+    void changeCourseStatus_FinishCourse_InvalidGrade_High() throws StudentException, CourseException, EnrolledCourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "finish",
+                    11.0
+            );
+        });
+    }
+
+
+    @Test
+    void changeCourseStatus_FinishCourse_InvalidGrade_Low() throws StudentException, CourseException, EnrolledCourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "finish",
+                    -10.0
+            );
+        });
+    }
+
+    @Test
+    void changeCourseStatus_FinishCourse_InvalidStatus() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.DROPPED)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "finish",
+                    -10.0
+            );
+        });
+    }
+
+    @Test
+    void changeCourseStatus_DropCourse_Success() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act
+        EnrolledCourse enrolledCourse = enrolledCourseService.changeCourseStatus(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "drop",
+                null
+        );
+
+        // Assert
+        assertNotNull(enrolledCourse);
+        assertEquals(EnrollmentStatus.DROPPED, enrolledCourse.getStatus());
+    }
+
+    @Test
+    void changeCourseStatus_DropCourse_InvalidStatus() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.DROPPED)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "drop",
+                    null
+            );
+        });
+    }
+
+    @Test
+    void changeCourseStatus_ReopenCourse_Success() throws EnrolledCourseException, StudentException, CourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.DROPPED)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act
+        EnrolledCourse enrolledCourse = enrolledCourseService.changeCourseStatus(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "reopen",
+                null
+        );
+
+        // Assert
+        assertNotNull(enrolledCourse);
+        assertEquals(EnrollmentStatus.ACTIVE, enrolledCourse.getStatus());
+    }
+
+    @Test
+    void changeCourseStatus_ReopenCourse_InvalidStatus() throws StudentException, CourseException, EnrolledCourseException {
+        // Arrange
+        Student student = new Student();
+        Course course = new Course();
+
+        EnrolledCourseBuilder enrolledCourseBuilder = new EnrolledCourseBuilder();
+        EnrolledCourse expectedEnrolledCourse = enrolledCourseBuilder
+                .withCourse(course)
+                .withStudent(student)
+                .withStatus(EnrollmentStatus.ACTIVE)
+                .build();
+
+        when(studentService.getStudent(any(UUID.class))).thenReturn(student);
+        when(courseService.getCourse(any(UUID.class))).thenReturn(course);
+        when(enrolledCourseRepository.findOneByStudentAndCourse(any(Student.class), any(Course.class))).thenReturn(Optional.ofNullable(expectedEnrolledCourse));
+        when(enrolledCourseRepository.save(any(EnrolledCourse.class))).thenReturn(expectedEnrolledCourse);
+
+        // Act and Assert
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(
+                    UUID.randomUUID(),
+                    UUID.randomUUID(),
+                    "reopen",
+                    null
+            );
+        });
+    }
+
+    @Test
+    void changeCourseStatus_InvalidOperation() {
+        assertThrows(EnrolledCourseException.class, () -> {
+            enrolledCourseService.changeCourseStatus(UUID.randomUUID(), UUID.randomUUID(), "invalid", null);
+        });
+    }
 }

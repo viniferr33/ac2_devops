@@ -75,6 +75,14 @@ public class EnrolledCourseService {
     public EnrolledCourse finishCourse(UUID studentId, UUID courseId, Double finalGrade) throws EnrolledCourseException, StudentException, CourseException {
         var enrolledCourse = getEnrolledCourse(studentId, courseId);
 
+        if (enrolledCourse.getStatus() != EnrollmentStatus.ACTIVE) {
+            throw new EnrolledCourseException("Cannot finish a course that is not Active!");
+        }
+
+        if (finalGrade > 10.0 || finalGrade < 0.0) {
+            throw new EnrolledCourseException("Invalid Grade!");
+        }
+
         enrolledCourse.setFinalGrade(finalGrade);
         enrolledCourse.setStatus(EnrollmentStatus.COMPLETED);
 
@@ -84,6 +92,10 @@ public class EnrolledCourseService {
     public EnrolledCourse dropCourse(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
         var enrolledCourse = getEnrolledCourse(studentId, courseId);
 
+        if (enrolledCourse.getStatus() != EnrollmentStatus.ACTIVE) {
+            throw new EnrolledCourseException("Cannot Drop course that is not Active!");
+        }
+
         enrolledCourse.setStatus(EnrollmentStatus.DROPPED);
 
         return enrolledCourseRepository.save(enrolledCourse);
@@ -91,6 +103,10 @@ public class EnrolledCourseService {
 
     public EnrolledCourse reopenCourse(UUID studentId, UUID courseId) throws EnrolledCourseException, StudentException, CourseException {
         var enrolledCourse = getEnrolledCourse(studentId, courseId);
+
+        if (enrolledCourse.getStatus() != EnrollmentStatus.DROPPED) {
+            throw new EnrolledCourseException("Cannot Reopen a course that is not Dropped!");
+        }
 
         enrolledCourse.setStatus(EnrollmentStatus.ACTIVE);
 
