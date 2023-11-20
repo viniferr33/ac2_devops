@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -76,6 +75,28 @@ class StudentServiceTest {
         assertEquals(name, getStudent.getName());
         assertEquals(email, getStudent.getEmail());
         verify(studentRepository, times(1)).findByEmail(any(String.class));
+    }
+
+    @Test
+    void getStudent_byUUID_StudentDoesNotExists() {
+        // Arrange
+        when(studentRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(StudentException.class, () -> {
+            studentService.getStudent(UUID.randomUUID());
+        });
+    }
+
+    @Test
+    void getStudent_byEmail_StudentDoesNotExists() {
+        // Arrange
+        when(studentRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(StudentException.class, () -> {
+            studentService.getStudent("email@email.com");
+        });
     }
 
     @Test
