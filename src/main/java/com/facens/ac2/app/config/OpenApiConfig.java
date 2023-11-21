@@ -1,4 +1,4 @@
-package com.facens.ac2.config;
+package com.facens.ac2.app.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

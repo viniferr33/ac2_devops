@@ -6,10 +6,14 @@ pipeline {
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_DATABASE = credentials('POSTGRES_DATABASE')
 
-        PORT = "${env.BRANCH_NAME == "develop" ? "8081" : "8080"}"
+        // DOCKER PUSH
+        DOCKER_TOKEN = credentials('DOCKER_TOKEN')
+        DOCKER_USER = "viniferr33"
+
+        PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
 
-        APPLICATION_IMAGE_NAME = "ac2_${env.ENV}"
+        APPLICATION_IMAGE_NAME = "viniferr33/ac2"
     }
 
     stages {
@@ -35,6 +39,10 @@ pipeline {
         }
 
         stage('Build') {
+            when {
+                branch 'dev'
+            }
+
             steps {
                 script {
                     if(isUnix()) {

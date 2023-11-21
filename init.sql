@@ -1,3 +1,73 @@
+create table table_course (
+    created_at timestamp,
+    id uuid not null,
+    name varchar(255),
+    primary key (id)
+);
+
+create table table_project (
+    created_at timestamp,
+    id uuid not null,
+    category varchar(255),
+    name varchar(255),
+    primary key (id)
+);
+
+create table table_student (
+    created_at timestamp,
+    updated_at timestamp,
+    id uuid not null,
+    email varchar(255),
+    name varchar(255),
+    primary key (id)
+);
+
+create table table_enrolled_course (
+    final_grade double precision not null,
+    finish_date date,
+    start_date date,
+    id bigserial,
+    course_id uuid,
+    student_id uuid,
+    status varchar(255) check (status in ('ACTIVE','COMPLETED','DROPPED')),
+    primary key (id),
+    foreign key (course_id) references table_course(id),
+    foreign key (student_id) references table_student(id)
+);
+
+create table table_enrolled_project (
+    finish_date date,
+    start_date date,
+    id bigserial,
+    project_id uuid,
+    student_id uuid,
+    status varchar(255) check (status in ('ACTIVE','COMPLETED','DROPPED')),
+    primary key (id),
+    foreign key (project_id) references table_project(id),
+    foreign key (student_id) references table_student(id)
+);
+
+-- The "if exists" clause is not supported in PostgreSQL
+alter table table_enrolled_course
+    add constraint FKgcrcap030yd8rqpyoxfttnceq
+    foreign key (course_id)
+    references table_course;
+
+alter table table_enrolled_course
+    add constraint FKkaftwvhsxleogrnw27e5x4jbt
+    foreign key (student_id)
+    references table_student;
+
+alter table table_enrolled_project
+    add constraint FKlfy5pa5yxmkvk3mbhvaq5pd4y
+    foreign key (project_id)
+    references table_project;
+
+alter table table_enrolled_project
+    add constraint FK22p0mq49khlrb1w05yrt6o4wh
+    foreign key (student_id)
+    references table_student;
+
 -- Insert sample data for table_course
 INSERT INTO table_course (created_at, id, name) VALUES
     ('2023-01-01 10:00:00', 'e3768c84-33c3-11ec-8d3a-0242ac130003', 'Computer Science'),
