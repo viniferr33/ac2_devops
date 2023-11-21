@@ -5,4 +5,5 @@ docker image prune -f
 
 docker build . -t "${APPLICATION_IMAGE_NAME}"
 
+docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
 docker push "${APPLICATION_IMAGE_NAME}"
