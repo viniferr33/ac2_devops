@@ -8,7 +8,7 @@ pipeline {
 
         // DOCKER PUSH
         DOCKER_TOKEN = credentials('DOCKER_TOKEN')
-        DOCKER_USER = viniferr33
+        DOCKER_USER = "viniferr33"
 
         PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
