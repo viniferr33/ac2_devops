@@ -6,6 +6,10 @@ pipeline {
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_DATABASE = credentials('POSTGRES_DATABASE')
 
+        // DOCKER PUSH
+        DOCKER_TOKEN = credentials('DOCKER_TOKEN')
+        DOCKER_USER = viniferr33
+
         PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
         ENV = getEnvName(env.BRANCH_NAME);
 
