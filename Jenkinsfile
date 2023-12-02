@@ -122,7 +122,7 @@ pipeline {
                         message: "Job '${currentBuild.fullDisplayName}' was successful!",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
-                        tokenCredentialId: credentials("SLACK_TOKEN")
+                        tokenCredentialId: "SLACK_TOKEN"
                 )
             }
         }
@@ -134,7 +134,7 @@ pipeline {
                         message: "Job '${currentBuild.fullDisplayName}' failed.",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
-                        tokenCredentialId: credentials("SLACK_TOKEN")
+                        tokenCredentialId: "SLACK_TOKEN"
                 )
             }
         }
