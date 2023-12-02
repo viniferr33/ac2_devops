@@ -117,11 +117,9 @@ pipeline {
     post {
         success {
             script {
-                println BUILD_URL
-
                 slackSend(
                         color: 'good',
-                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${BUILD_URL})",
+                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${currentBuild.absoluteUrl})",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
@@ -131,11 +129,9 @@ pipeline {
 
         failure {
             script {
-                def buildFailureCause = currentBuild.rawBuild.getBuildStatusSummary().message
-
                 slackSend(
                         color: 'danger',
-                        message: "Job '${currentBuild.fullDisplayName}' failed. (${env.BUILD_URL}|Open)",
+                        message: "Job '${currentBuild.fullDisplayName}' failed. (${currentBuild.absoluteUrl})",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
