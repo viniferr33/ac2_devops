@@ -117,8 +117,7 @@ pipeline {
     post {
         success {
             script {
-                println env.BUILD_URL
-                println env.JOB_URL
+                println currentBuild
 
                 slackSend(
                         color: 'good',
