@@ -1,19 +1,23 @@
 pipeline {
     agent any
     environment {
-        // POSTGRES AUTHENTICATION
-        POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-        POSTGRES_USER = credentials('POSTGRES_USER')
-        POSTGRES_DATABASE = credentials('POSTGRES_DATABASE')
+        // postgres authentication
+        postgres_password = credentials('postgres_password')
+        postgres_user = credentials('postgres_user')
+        postgres_database = credentials('postgres_database')
 
-        // DOCKER PUSH
-        DOCKER_TOKEN = credentials('DOCKER_TOKEN')
-        DOCKER_USER = "viniferr33"
+        // docker push
+        docker_token = credentials('docker_token')
+        docker_user = "viniferr33"
 
-        PORT = "${env.BRANCH_NAME == "dev" ? "8081" : "8080"}"
-        ENV = getEnvName(env.BRANCH_NAME);
+        port = "${env.branch_name == "dev" ? "8081" : "8080"}"
+        env = getenvname(env.branch_name);
 
-        APPLICATION_IMAGE_NAME = "viniferr33/ac2"
+        slack_id = credentials('slack_token')
+        slack_channel = "#dev"
+        slack_workspace = "vinidevworkspace"
+
+        application_image_name = "viniferr33/ac2"
     }
 
     stages {
@@ -45,7 +49,7 @@ pipeline {
 
             steps {
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/build.sh'
                         sh './jenkins/scripts/build.sh'
                     } else {
@@ -73,7 +77,7 @@ pipeline {
                 }
 
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/compose.sh'
                         sh './jenkins/scripts/compose.sh'
                     } else {
@@ -84,7 +88,7 @@ pipeline {
                 input message: 'Kill the container? (click to continue)'
 
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/kill.sh'
                         sh './jenkins/scripts/kill.sh'
                     } else {
@@ -113,12 +117,38 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            script {
+                slackSend(
+                        color: 'good',
+                        message: "Job '${currentBuild.fullDisplayName}' was successful!",
+                        channel: env.slack_channel,
+                        teamDomain: env.slack_workspace,
+                        tokenCredentialId: env.slack_id
+                )
+            }
+        }
+
+        failure {
+            script {
+                slackSend(
+                        color: 'danger',
+                        message: "Job '${currentBuild.fullDisplayName}' failed.",
+                        channel: env.slack_channel,
+                        teamDomain: env.slack_workspace,
+                        tokenCredentialId: env.slack_id
+                )
+            }
+        }
+    }
 }
 
-def getEnvName(branchName) {
-    if("main".equals(branchName)) {
+def getenvname(branchname) {
+    if ("main".equals(branchname)) {
         return "prod";
-    } else if ("homolog".equals(branchName)) {
+    } else if ("homolog".equals(branchname)) {
         return "homol";
     } else {
         return "dev";
