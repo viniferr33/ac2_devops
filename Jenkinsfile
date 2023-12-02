@@ -141,7 +141,7 @@ pipeline {
     }
 }
 
-def getenvname(branchname) {
+def getEnvName(branchname) {
     if ("main".equals(branchname)) {
         return "prod";
     } else if ("homolog".equals(branchname)) {
