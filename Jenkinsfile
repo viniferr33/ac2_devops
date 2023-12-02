@@ -15,7 +15,7 @@ pipeline {
 
         APPLICATION_IMAGE_NAME = "viniferr33/ac2"
 
-        SLACK_ID = credentials("SLACK_ID")
+        SLACK_ID = credentials("SLACK_TOKEN")
         SLACK_CHANNEL = "#dev"
         SLACK_WORKSPACE = "vinidevworkspace"
     }
