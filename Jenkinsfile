@@ -118,12 +118,10 @@ pipeline {
         success {
             script {
                 def jacocoReport = junit '**/target/site/jacoco/jacoco.xml'
-                def linesCoverage = jacocoReport.actions.find { it instanceof hudson.tasks.junit.CoverageAction }
-                def coveragePercentage = linesCoverage ? linesCoverage.getCoverage(hudson.tasks.junit.CoverageMetric.LINE) : 0
 
                 slackSend(
                         color: 'good',
-                        message: "Job '${currentBuild.fullDisplayName}' was successful!\nCobertura de Código: ${coveragePercentage}%",
+                        message: "Job '${currentBuild.fullDisplayName}' was successful!\nCobertura de Código: ${jacocoReport}",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
