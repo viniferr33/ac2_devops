@@ -117,11 +117,11 @@ pipeline {
     post {
         success {
             script {
-                println currentBuild
+                println BUILD_URL
 
                 slackSend(
                         color: 'good',
-                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${env.BUILD_URL})",
+                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${BUILD_URL})",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
