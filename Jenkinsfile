@@ -117,18 +117,12 @@ pipeline {
     post {
         success {
             script {
-                def testResults = junit 'target/surefire-reports/**/*.xml'
-                def linesCoverage = jacocoReport.actions.find { it instanceof hudson.tasks.junit.CoverageAction }
-
-                println linesCoverage
-                println testResults
-
                 println env.BUILD_URL
                 println env.JOB_URL
 
                 slackSend(
                         color: 'good',
-                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${env.BUILD_URL}) \nTestes: ${testResults}\nCobertura de Código: ${jacocoReport}",
+                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${env.BUILD_URL})",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
