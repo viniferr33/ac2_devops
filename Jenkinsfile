@@ -117,11 +117,12 @@ pipeline {
     post {
         success {
             script {
-                def jacocoReport = junit '**/target/site/jacoco/jacoco.xml'
+               def testResults = junit 'target/surefire-reports/**/*.xml'
+               def jacocoReport = jacoco(execPattern: 'target/**.exec')
 
                 slackSend(
                         color: 'good',
-                        message: "Job '${currentBuild.fullDisplayName}' was successful!\nCobertura de Código: ${jacocoReport}",
+                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${env.BUILD_URL}|Open) \nTestes: ${testResults}\nCobertura de Código: ${jacocoReport}",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
@@ -135,7 +136,7 @@ pipeline {
 
                 slackSend(
                         color: 'danger',
-                        message: "Job '${currentBuild.fullDisplayName}' failed.\nError: ${buildFailureCause}",
+                        message: "Job '${currentBuild.fullDisplayName}' failed. (${env.BUILD_URL}|Open)",
                         channel: "#dev",
                         teamDomain: "vinidevworkspace",
                         tokenCredentialId: "SLACK_TOKEN"
