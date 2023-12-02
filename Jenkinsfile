@@ -14,10 +14,6 @@ pipeline {
         ENV = getEnvName(env.BRANCH_NAME);
 
         APPLICATION_IMAGE_NAME = "viniferr33/ac2"
-
-        SLACK_ID = credentials("SLACK_TOKEN")
-        SLACK_CHANNEL = "#dev"
-        SLACK_WORKSPACE = "vinidevworkspace"
     }
 
     stages {
@@ -124,9 +120,9 @@ pipeline {
                 slackSend(
                         color: 'good',
                         message: "Job '${currentBuild.fullDisplayName}' was successful!",
-                        channel: env.SLACK_CHANNEL,
-                        teamDomain: env.SLACK_WORKSPACE,
-                        tokenCredentialId: env.SLACK_ID
+                        channel: "#dev",
+                        teamDomain: "vinidevworkspace",
+                        tokenCredentialId: credentials("SLACK_TOKEN")
                 )
             }
         }
@@ -136,9 +132,9 @@ pipeline {
                 slackSend(
                         color: 'danger',
                         message: "Job '${currentBuild.fullDisplayName}' failed.",
-                        channel: env.SLACK_CHANNEL,
-                        teamDomain: env.SLACK_WORKSPACE,
-                        tokenCredentialId: env.SLACK_ID
+                        channel: "#dev",
+                        teamDomain: "vinidevworkspace",
+                        tokenCredentialId: credentials("SLACK_TOKEN")
                 )
             }
         }
