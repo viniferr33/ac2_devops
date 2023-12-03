@@ -45,7 +45,7 @@ pipeline {
 
             steps {
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/build.sh'
                         sh './jenkins/scripts/build.sh'
                     } else {
@@ -73,7 +73,7 @@ pipeline {
                 }
 
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/compose.sh'
                         sh './jenkins/scripts/compose.sh'
                     } else {
@@ -84,7 +84,7 @@ pipeline {
                 input message: 'Kill the container? (click to continue)'
 
                 script {
-                    if(isUnix()) {
+                    if (isUnix()) {
                         sh 'chmod +x ./jenkins/scripts/kill.sh'
                         sh './jenkins/scripts/kill.sh'
                     } else {
@@ -113,12 +113,38 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            script {
+                slackSend(
+                        color: 'good',
+                        message: "Job '${currentBuild.fullDisplayName}' was successful! (${currentBuild.absoluteUrl})",
+                        channel: "#dev",
+                        teamDomain: "vinidevworkspace",
+                        tokenCredentialId: "SLACK_TOKEN"
+                )
+            }
+        }
+
+        failure {
+            script {
+                slackSend(
+                        color: 'danger',
+                        message: "Job '${currentBuild.fullDisplayName}' failed. (${currentBuild.absoluteUrl})",
+                        channel: "#dev",
+                        teamDomain: "vinidevworkspace",
+                        tokenCredentialId: "SLACK_TOKEN"
+                )
+            }
+        }
+    }
 }
 
-def getEnvName(branchName) {
-    if("main".equals(branchName)) {
+def getEnvName(branchname) {
+    if ("main".equals(branchname)) {
         return "prod";
-    } else if ("homolog".equals(branchName)) {
+    } else if ("homolog".equals(branchname)) {
         return "homol";
     } else {
         return "dev";
