@@ -1,2 +1,2 @@
-echo '... DEPLOY TO AZURE ...'
-echo 'Not implemented yet! :('
+echo '... DEPLOY TO RENDER ...'
+curl "${DEPLOY_HOOK}"
