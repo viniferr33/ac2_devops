@@ -6,6 +6,9 @@ pipeline {
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_DATABASE = credentials('POSTGRES_DATABASE')
 
+        // RENDER
+        DEPLOY_HOOK = credentials('DEPLOY_HOOK')
+
         // DOCKER PUSH
         DOCKER_TOKEN = credentials('DOCKER_TOKEN')
         DOCKER_USER = "viniferr33"
